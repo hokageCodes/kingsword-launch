@@ -15,7 +15,7 @@ const EventPage: React.FC = () => {
         {!bannerLoaded && <Skeleton height="100%" />}
         <Image
           src="/assets/event-hero.webp"
-          alt="Banner"
+          alt="event section banner"
           layout="fill"
           objectFit="cover"
           onLoadingComplete={() => setBannerLoaded(true)}
@@ -43,7 +43,7 @@ const EventPage: React.FC = () => {
             {!eventImageLoaded && <Skeleton height={300} />}
             <Image
                 src="/assets/mr-mrs.webp"
-                alt="Event"
+                alt="Event section"
                 width={600}
                 height={600}
                 className="rounded"

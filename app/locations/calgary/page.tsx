@@ -42,7 +42,7 @@ const CalgaryPage: React.FC = () => {
           <Suspense fallback={<Skeleton height={400} />}>
             <Image
               src="/assets/c3.webp"
-              alt="Pastor Image"
+              alt="Pastor"
               width={600} // Adjust width as needed
               height={400} // Adjust height as needed
               className="w-full h-auto"
