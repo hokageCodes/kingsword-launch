@@ -1,0 +1,151 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    background: black;
+}
+
+.hamburger {
+    display: none;
+    color: white;
+}
+
+.nav-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 50px;
+}
+
+.nav-item {
+    margin-left: 3rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.nav-link {
+    font-size: 20px;
+    font-weight: 400;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.nav-link:hover {
+    color: yellow;
+}
+
+.nav-logo {
+    margin-top: 10px;
+    font-size: 2.1rem;
+    font-weight: 500;
+    color: #482ff7;
+}
+
+.logo {
+    width: 280px;
+    height: auto;
+    max-height: 100%;
+    margin-left: -40px;
+}
+
+.dropdown-icon-wrapper {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}  
+.dropdown-icon {
+    color: white; /* Set icon color to white */
+    margin-left: 5px;
+    transition: transform 0.3s;
+}
+
+.dropdown-icon.rotate {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    outline: none;
+    border: none;
+    position: absolute;
+    top: 180%;
+    left: 0;
+    background-color: black;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.dropdown-link {
+    display: block;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+}
+
+.dropdown-link:hover {
+    background-color: #444;
+}
+
+@media only screen and (max-width: 768px) {
+    .nav-menu {
+        position: fixed;
+        left: -100%;
+        top: 80px;  /* Changed to align with nav header */
+        flex-direction: column;
+        background-color: black;
+        width: 100%;
+        text-align: center;
+        transition: 0.3s;
+        box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
+        z-index: 1000;  /* Ensure it stays on top */
+    }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .nav-item {
+        margin: 1.5rem 0;
+    }
+
+    .hamburger {
+        display: block;
+        cursor: pointer;
+        margin-right: 20px;
+        color: white;
+        z-index: 1000;
+    }
+
+    .logo {
+        margin-left: -50px;
+    }
+
+    .dropdown-menu {
+        background: white;
+        color: black;
+        position: relative;
+        top: auto;
+        left: auto;
+        margin-top: 10px;
+        width: 90%;  /* Ensures dropdown doesn't overflow horizontally */
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        overflow: auto;  /* Make the dropdown scrollable if necessary */
+        max-height: 150px;  /* Limit the height */
+    }
+
+    .dropdown-link {
+        color: black;
+    }
+
+    .dropdown-link:hover {
+        color: white;
+        background: black;
+    }
+}
