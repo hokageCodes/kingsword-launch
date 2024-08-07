@@ -1,7 +1,7 @@
 // src/firebaseConfig.tsx
 import { initializeApp, FirebaseApp } from "firebase/app";
-import { getFirestore, Firestore, collection, addDoc, getDoc, doc } from "firebase/firestore";
-import { getAuth, Auth, signInWithEmailAndPassword, User } from "firebase/auth";
+import { getFirestore, Firestore, collection, addDoc, getDocs, getDoc, deleteDoc, doc } from "firebase/firestore";
+import { getAuth, Auth, signInWithEmailAndPassword } from "firebase/auth";
 import { getAnalytics, Analytics } from "firebase/analytics";
 
 let app: FirebaseApp;
@@ -26,4 +26,4 @@ if (typeof window !== "undefined") {
   analytics = getAnalytics(app);
 }
 
-export { db, collection, addDoc, auth, signInWithEmailAndPassword, getDoc, doc };
+export { db, collection, addDoc, getDocs, getDoc, deleteDoc, doc, auth, signInWithEmailAndPassword };

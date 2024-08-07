@@ -1,48 +1,119 @@
-// src/components/admin/AdminSidebar.tsx
-"use client"
+// components/Sidebar.tsx
 import Link from 'next/link';
-import { signOut } from 'firebase/auth';
-import { auth } from '../../firebaseConfig';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { FaHome, FaFileAlt, FaUpload, FaSignOutAlt, FaChevronDown, FaChevronUp, FaList, FaUser, FaStar } from 'react-icons/fa';
 
-const AdminSidebar = () => {
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    await signOut(auth!);
-    router.push('/admin-login');
-  };
+const Sidebar = () => {
+  const [showSubmissions, setShowSubmissions] = useState(false);
+  const [showUploads, setShowUploads] = useState(false);
 
   return (
-    <div className="h-screen flex flex-col w-64 bg-gray-800 text-white">
-      <div className="flex-grow p-4">
-        <h2 className="text-2xl font-bold mb-4">Admin Dashboard</h2>
+    <div className="bg-black text-white flex flex-col h-screen shadow-lg w-64">
+      <div className="flex items-center p-4 bg-black">
+        <div className="text-xl text-white font-bold">Kingsword Church</div>
+      </div>
+
+      <nav className="flex-1 mt-24">
         <ul>
-          <li className="mb-2">
+          <li>
             <Link legacyBehavior href="/admin">
-              <a className="hover:underline">Dashboard</a>
+              <a className="flex items-center p-4 hover:bg-white hover:text-black">
+                <FaHome className="mr-3" />
+                Dashboard
+              </a>
             </Link>
           </li>
-          <li className="mb-2">
-            <Link legacyBehavior href="/admin/users">
-              <a className="hover:underline">Users</a>
-            </Link>
+
+          <li>
+            <button
+              onClick={() => setShowSubmissions(!showSubmissions)}
+              className="flex items-center p-4 w-full text-left hover:bg-white hover:text-black"
+            >
+              <FaFileAlt className="mr-3" />
+              <a href="/admin/submissions">Submissions</a>
+              {showSubmissions ? <FaChevronUp className="ml-auto" /> : <FaChevronDown className="ml-auto" />}
+            </button>
+            {showSubmissions && (
+              <ul className="pl-8 mt-2">
+                <li>
+                  <Link legacyBehavior href="/admin/submissions/connect-form">
+                    <a className="flex items-center p-4 hover:bg-white hover:text-black">
+                      <FaList className="mr-3" />
+                      Connect Form
+                    </a>
+                  </Link>
+                </li>
+                <li>
+                  <Link legacyBehavior href="/admin/submissions/contact-form">
+                    <a className="flex items-center p-4 hover:bg-white hover:text-black">
+                      <FaUser className="mr-3" />
+                      Contact Form
+                    </a>
+                  </Link>
+                </li>
+                <li>
+                  <Link legacyBehavior href="/admin/submissions//volunteers">
+                    <a className="flex items-center p-4 hover:bg-white hover:text-black">
+                      <FaStar className="mr-3" />
+                      Volunteers
+                    </a>
+                  </Link>
+                </li>
+                <li>
+                  <Link legacyBehavior href="/admin/submissions/worship-form">
+                    <a className="flex items-center p-4 hover:bg-white hover:text-black">
+                      <FaList className="mr-3" />
+                      Worship Form
+                    </a>
+                  </Link>
+                </li>
+              </ul>
+            )}
           </li>
-          <li className="mb-2">
-            <Link legacyBehavior href="/admin/settings">
-              <a className="hover:underline">Settings</a>
-            </Link>
+
+          <li>
+            <button
+              onClick={() => setShowUploads(!showUploads)}
+              className="flex items-center p-4 w-full text-left hover:bg-black hover:text-white"
+            >
+              <FaUpload className="mr-3" />
+              Uploads
+              {showUploads ? <FaChevronUp className="ml-auto" /> : <FaChevronDown className="ml-auto" />}
+            </button>
+            {showUploads && (
+              <ul className="pl-8 mt-2">
+                <li>
+                  <Link legacyBehavior href="/events-upload">
+                    <a className="flex items-center p-4 hover:bg-gray-600">
+                      <FaList className="mr-3" />
+                      Events Upload
+                    </a>
+                  </Link>
+                </li>
+                <li>
+                  <Link legacyBehavior href="/dynamic-youtube">
+                    <a className="flex items-center p-4 hover:bg-gray-600">
+                      <FaList className="mr-3" />
+                      Dynamic YouTube
+                    </a>
+                  </Link>
+                </li>
+              </ul>
+            )}
           </li>
         </ul>
+      </nav>
+
+      <div className="p-4 mt-auto bg-black text-white">
+        <Link legacyBehavior href="/logout">
+          <a className="flex items-center p-4 hover:bg-gray-700 w-full">
+            <FaSignOutAlt className="mr-3" />
+            Logout
+          </a>
+        </Link>
       </div>
-      <button
-        onClick={handleLogout}
-        className="w-full bg-red-500 text-white py-2 hover:bg-red-700"
-      >
-        Logout
-      </button>
     </div>
   );
 };
 
-export default AdminSidebar;
+export default Sidebar;
