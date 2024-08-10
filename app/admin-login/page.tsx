@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -15,7 +15,8 @@ const AdminLoginForm = () => {
         try {
             await signInWithEmailAndPassword(auth, email, password);
             router.push('/admin'); // Redirect to admin page on success
-        } catch (error) {
+        } catch (error: any) {
+            console.error('Login error:', error.message); // Log detailed error
             setError('Invalid credentials');
         }
     };
@@ -24,21 +25,21 @@ const AdminLoginForm = () => {
         <div>
             <h1>Admin Login</h1>
             {error && <p>{error}</p>}
-                <form onSubmit={handleLogin}>
-                    <input
-                        type="email"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
+            <form onSubmit={handleLogin}>
+                <input
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
                 <button type="submit">Login</button>
             </form>
         </div>
