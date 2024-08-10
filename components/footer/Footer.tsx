@@ -82,7 +82,7 @@ const Footer = () => {
         <p className="py-4">KingsWord Canada. All rights reserved</p>
         <div className="flex justify-between sm:w-[300px] pt-4 text-2xl">
           {items.map((item, index) => (
-            <a aria-label="social media links" href={item.link} key={index} className="hover:text-white">
+            <a target="_blank" aria-label="social media links" href={item.link} key={index} className="hover:text-white">
               <item.icon />
             </a>
           ))}

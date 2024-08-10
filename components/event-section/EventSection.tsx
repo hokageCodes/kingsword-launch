@@ -7,23 +7,34 @@ import 'swiper/css/autoplay';
 import Image from 'next/image';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import { db } from '../../firebaseConfig';
+import { collection, getDocs } from 'firebase/firestore';
 
 const EventsSection: React.FC = () => {
+    const [events, setEvents] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const events = [
-        { title: 'Supernatural Canada', subtitle: 'Annual Worship Meeting', imageUrl: '/assets/Supernatural.webp' },
-        { title: 'Limitless', subtitle: 'Worship Meeting', imageUrl: '/assets/Limitless.webp' },
-        { title: 'Easter Sunday', subtitle: 'Easter Service', imageUrl: '/assets/Easter-Sunday-Service.webp' },
-        { title: 'Mr. & Mrs', subtitle: 'Love Series', imageUrl: '/assets/mr-mrs.webp' },
-        { title: 'His & Hers', subtitle: 'Love Series', imageUrl: '/assets/his-hers.webp' },
-        { title: 'Carol Service', subtitle: 'Christmas Carol Service', imageUrl: '/assets/Carol-Service.webp' },
-        { title: 'Cross Over Service', subtitle: 'New Years Eve', imageUrl: '/assets/Cross-Over-service.webp' },
-    ];
 
     useEffect(() => {
-        const timeoutId = setTimeout(() => setIsLoading(false), 2000); // Simulate a delay
-        return () => clearTimeout(timeoutId);
-    }, []);
+        const fetchEvents = async () => {
+            if (!db) {
+                console.error('Firestore is not initialized.');
+                return;
+            }
+
+            try {
+                const eventsCollection = collection(db, 'event-uploads');
+                const eventsSnapshot = await getDocs(eventsCollection);
+                const eventsList = eventsSnapshot.docs.map(doc => doc.data());
+                setEvents(eventsList);
+            } catch (error) {
+                console.error('Error fetching events: ', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchEvents();
+    }, []); // Add an empty dependency array to run the effect only once
 
     return (
         <div className="bg-yellow-100">
@@ -36,59 +47,58 @@ const EventsSection: React.FC = () => {
                         View all events
                     </a>
                 </div>
-                <Swiper
-                    modules={[Autoplay]}
-                    spaceBetween={50}
-                    slidesPerView={1}
-                    autoplay={{
-                        delay: 2500,
-                        disableOnInteraction: false,
-                    }}
-                    breakpoints={{
-                        640: {
-                        slidesPerView: 2,
-                        },
-                        768: {
-                        slidesPerView: 3,
-                        },
-                        1024: {
-                        slidesPerView: 4,
-                        },
-                    }}
-                >
-                {events.map((event, index) => (
-                    <SwiperSlide key={index}>
-                    <div className="rounded overflow-hidden shadow-lg bg-white">
-                        {isLoading ? (
-                        <Skeleton height={200} />
-                        ) : (
-                        <Image
-                            src={event.imageUrl}
-                            alt={`Event ${event.title}`}
-                            width={500}
-                            height={300}
-                            layout="responsive"
-                            objectFit="cover"
-                            className="w-full h-auto"
-                        />
-                        )}
-                        <div className="px-6 py-4">
-                        {isLoading ? (
-                            <div>
-                            <Skeleton width={200} height={24} />
-                            <Skeleton width={150} height={20} />
+                {isLoading ? (
+                    <div className="flex flex-wrap justify-center gap-4">
+                        {[...Array(4)].map((_, index) => (
+                            <div key={index} className="w-full sm:w-1/2 md:w-1/4 p-2">
+                                <Skeleton height={200} />
+                                <Skeleton width={200} height={24} className="mt-4" />
+                                <Skeleton width={150} height={20} />
                             </div>
-                        ) : (
-                            <>
-                            <div className="font-bold text-xl mb-2">{event.title}</div>
-                            <p className="text-gray-700 text-base">{event.subtitle}</p>
-                            </>
-                        )}
-                        </div>
+                        ))}
                     </div>
-                    </SwiperSlide>
-                ))}
-                </Swiper>
+                ) : (
+                    <Swiper
+                        modules={[Autoplay]}
+                        spaceBetween={50}
+                        slidesPerView={1}
+                        autoplay={{
+                            delay: 2500,
+                            disableOnInteraction: false,
+                        }}
+                        breakpoints={{
+                            640: {
+                                slidesPerView: 2,
+                            },
+                            768: {
+                                slidesPerView: 3,
+                            },
+                            1024: {
+                                slidesPerView: 4,
+                            },
+                        }}
+                    >
+                        {events.map((event, index) => (
+                            <SwiperSlide key={index}>
+                                <div className="rounded overflow-hidden shadow-lg bg-white">
+                                    <Image
+                                        src={event.imageUrl}
+                                        alt={`Event ${event.title}`}
+                                        width={500}
+                                        height={300}
+                                        layout="responsive"
+                                        objectFit="cover"
+                                        className="w-full h-auto"
+                                    />
+                                    <div className="px-6 py-4">
+                                        <div className="font-bold text-xl mb-2">{event.title}</div>
+                                        <p className="text-gray-700 text-base">{event.subtitle}</p>
+                                    </div>
+                                </div>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                )}
             </div>
         </div>
     );

@@ -72,45 +72,45 @@ const OverviewPage = () => {
               <h2 className="text-lg font-semibold">Connect Form</h2>
               <p className="text-2xl font-bold">{counts['connect-form'] || 0}</p>
               <p>Total submissions</p>
-              <button
+              {/* <button
                 onClick={() => handleViewDetails('connect-form')}
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
               >
                 View Details
-              </button>
+              </button> */}
             </div>
             <div className="bg-white p-6 rounded shadow">
               <h2 className="text-lg font-semibold">Contact Form</h2>
               <p className="text-2xl font-bold">{counts['contactForm'] || 0}</p>
               <p>Total submissions</p>
-              <button
+              {/* <button
                 onClick={() => handleViewDetails('contactForm')}
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
               >
                 View Details
-              </button>
+              </button> */}
             </div>
             <div className="bg-white p-6 rounded shadow">
               <h2 className="text-lg font-semibold">Volunteers</h2>
               <p className="text-2xl font-bold">{counts['volunteers'] || 0}</p>
               <p>Total submissions</p>
-              <button
+              {/* <button
                 onClick={() => handleViewDetails('volunteers')}
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
               >
                 View Details
-              </button>
+              </button> */}
             </div>
             <div className="bg-white p-6 rounded shadow">
               <h2 className="text-lg font-semibold">Worship Form</h2>
               <p className="text-2xl font-bold">{counts['worshipForm'] || 0}</p>
               <p>Total submissions</p>
-              <button
+              {/* <button
                 onClick={() => handleViewDetails('worshipForm')}
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
               >
                 View Details
-              </button>
+              </button> */}
             </div>
           </div>
         )}

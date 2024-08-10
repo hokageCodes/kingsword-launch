@@ -10,7 +10,7 @@ const Sidebar = () => {
   return (
     <div className="bg-black text-white flex flex-col h-screen shadow-lg w-64">
       <div className="flex items-center p-4 bg-black">
-        <div className="text-xl text-white font-bold">Kingsword Church</div>
+        <div className="text-xl text-white font-bold">Kingsword Canada</div>
       </div>
 
       <nav className="flex-1 mt-24">
@@ -67,6 +67,14 @@ const Sidebar = () => {
                     </a>
                   </Link>
                 </li>
+                <li>
+                  <Link legacyBehavior href="/admin/submissions/join-us">
+                    <a className="flex items-center p-4 hover:bg-white hover:text-black">
+                      <FaList className="mr-3" />
+                      Join-Us Form
+                    </a>
+                  </Link>
+                </li>
               </ul>
             )}
           </li>
@@ -77,13 +85,13 @@ const Sidebar = () => {
               className="flex items-center p-4 w-full text-left hover:bg-black hover:text-white"
             >
               <FaUpload className="mr-3" />
-              Uploads
+              <a href="/admin/uploads">Uploads</a>
               {showUploads ? <FaChevronUp className="ml-auto" /> : <FaChevronDown className="ml-auto" />}
             </button>
             {showUploads && (
               <ul className="pl-8 mt-2">
                 <li>
-                  <Link legacyBehavior href="/events-upload">
+                  <Link legacyBehavior href="/admin/uploads/events-upload">
                     <a className="flex items-center p-4 hover:bg-gray-600">
                       <FaList className="mr-3" />
                       Events Upload
@@ -91,7 +99,7 @@ const Sidebar = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link legacyBehavior href="/dynamic-youtube">
+                  <Link legacyBehavior href="/admin/uploads/dynamic-youtube">
                     <a className="flex items-center p-4 hover:bg-gray-600">
                       <FaList className="mr-3" />
                       Dynamic YouTube

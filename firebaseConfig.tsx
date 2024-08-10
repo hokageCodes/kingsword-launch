@@ -1,14 +1,10 @@
-// src/firebaseConfig.tsx
-import { initializeApp, FirebaseApp } from "firebase/app";
-import { getFirestore, Firestore, collection, addDoc, getDocs, getDoc, deleteDoc, doc } from "firebase/firestore";
-import { getAuth, Auth, signInWithEmailAndPassword } from "firebase/auth";
-import { getAnalytics, Analytics } from "firebase/analytics";
+import { initializeApp, FirebaseApp } from 'firebase/app';
+import { getFirestore, Firestore, collection, addDoc, getDocs, getDoc, deleteDoc, doc } from 'firebase/firestore';
+import { getAuth, Auth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getStorage } from 'firebase/storage';
+import { getAnalytics, Analytics } from 'firebase/analytics';
 
-let app: FirebaseApp;
-let db: Firestore;
-let auth: Auth;
-let analytics: Analytics;
-
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAuny5xpmnG3WJ66hPi3RtunJVFXPm1AcM",
   authDomain: "kingsword-canada.firebaseapp.com",
@@ -19,11 +15,13 @@ const firebaseConfig = {
   measurementId: "G-PKX3ZF67W3"
 };
 
-if (typeof window !== "undefined") {
-  app = initializeApp(firebaseConfig);
-  db = getFirestore(app);
-  auth = getAuth(app);
-  analytics = getAnalytics(app);
-}
+// Initialize Firebase
+const app: FirebaseApp = initializeApp(firebaseConfig);
 
-export { db, collection, addDoc, getDocs, getDoc, deleteDoc, doc, auth, signInWithEmailAndPassword };
+// Initialize Firestore, Storage, Auth, and Analytics
+const db: Firestore = getFirestore(app);
+const storage = getStorage(app);
+const auth: Auth = getAuth(app);
+const analytics: Analytics = getAnalytics(app);
+
+export { app, db, storage, auth, analytics, collection, addDoc, getDocs, getDoc, deleteDoc, doc, signInWithEmailAndPassword, firebaseConfig };

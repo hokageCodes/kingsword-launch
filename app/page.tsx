@@ -1,3 +1,4 @@
+import VideoSection from '@/components/video-section/VideoSection';
 import { Suspense, lazy } from 'react';
 import Skeleton from 'react-loading-skeleton';
 
@@ -11,6 +12,10 @@ export default function Home() {
     <>
       <Suspense fallback={<Skeleton height={500} />}>
         <HeroSection />
+      </Suspense>
+
+      <Suspense fallback={<Skeleton height={500} />}>
+        <VideoSection />
       </Suspense>
 
       <Suspense fallback={<div>Loading...</div>}>
