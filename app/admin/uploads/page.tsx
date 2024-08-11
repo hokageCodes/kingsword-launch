@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import AdminLayout from '../Layout';
+import AdminLayout from '../../admin/Layout';
 import Image from 'next/image';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -84,7 +84,7 @@ export default function UploadsOverviewPage() {
 
   return (
     <AdminLayout>
-      <div className="mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold mb-4">Uploads Overview</h2>
 
         {/* Tabs Navigation */}
@@ -104,22 +104,22 @@ export default function UploadsOverviewPage() {
         </div>
 
         {/* Dynamic Content based on Selected Tab */}
-        {activeTab === 'youtube' && (
-          <div className="bg-white rounded shadow-md overflow-hidden mb-8">
-            <h3 className="text-xl font-semibold p-4 border-b">YouTube Uploads</h3>
-            {isLoading ? (
-              <div className="p-4">
-                <Skeleton height={200} count={4} />
-              </div>
-            ) : error ? (
-              <p className="text-red-500 p-4">{error}</p>
-            ) : (
-              <div className="max-h-[60vh] overflow-y-auto p-4">
-                {videos.length === 0 ? (
-                  <p className="text-gray-500">No videos available.</p>
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                    {videos.map(video => (
+        <div className="bg-white rounded shadow-md overflow-hidden">
+          {activeTab === 'youtube' && (
+            <div className="p-4">
+              <h3 className="text-xl font-semibold border-b mb-4">YouTube Uploads</h3>
+              {isLoading ? (
+                <div>
+                  <Skeleton height={200} count={4} />
+                </div>
+              ) : error ? (
+                <p className="text-red-500">{error}</p>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  {videos.length === 0 ? (
+                    <p className="text-gray-500">No videos available.</p>
+                  ) : (
+                    videos.map(video => (
                       <div key={video.id} className="bg-gray-200 hover:bg-gray-300 rounded-lg cursor-pointer p-2 flex flex-col md:flex-row items-center">
                         <div className="w-full md:w-24 h-24 flex-none bg-cover rounded-lg overflow-hidden mb-2 md:mb-0 md:mr-4">
                           <Image
@@ -135,31 +135,29 @@ export default function UploadsOverviewPage() {
                           <p className="text-xs text-gray-600">{video.pastor}</p>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
+          )}
 
-        {activeTab === 'events' && (
-          <div className="bg-white rounded shadow-md overflow-hidden">
-            <h3 className="text-xl font-semibold p-4 border-b">Events</h3>
-            {isLoading ? (
-              <div className="p-4">
-                <Skeleton height={40} width={200} />
-                <Skeleton height={200} count={5} />
-              </div>
-            ) : error ? (
-              <p className="text-red-500 p-4">{error}</p>
-            ) : (
-              <div className="max-h-[60vh] overflow-y-auto p-4">
-                {events.length === 0 ? (
-                  <p className="text-gray-500">No events available.</p>
+          {activeTab === 'events' && (
+            <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <h3 className="text-xl font-semibold col-span-full mb-4">Events</h3>
+              {isLoading ? (
+                <div>
+                  <Skeleton height={40} width={200} />
+                  <Skeleton height={200} count={5} />
+                </div>
+              ) : error ? (
+                <p className="text-red-500">{error}</p>
+              ) : (
+                events.length === 0 ? (
+                  <p className="text-gray-500 col-span-full">No events available.</p>
                 ) : (
                   events.map(event => (
-                    <div key={event.id} className="bg-gray-100 hover:bg-gray-200 rounded-lg p-4 mb-4 flex items-center">
+                    <div key={event.id} className="bg-gray-100 hover:bg-gray-200 rounded-lg p-4 flex items-center">
                       <div className="flex-shrink-0 w-24 h-16 mr-4">
                         {event.imageUrl ? (
                           <Image
@@ -179,21 +177,21 @@ export default function UploadsOverviewPage() {
                       </div>
                     </div>
                   ))
-                )}
-                {hasMore && (
-                  <div className="flex justify-center mt-4">
-                    <button
-                      onClick={loadMore}
-                      className="bg-black text-white py-2 px-4 rounded transition duration-300 ease-in-out hover:bg-gray-800"
-                    >
-                      Load More
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        )}
+                )
+              )}
+              {hasMore && activeTab === 'events' && (
+                <div className="flex justify-center col-span-full mt-4">
+                  <button
+                    onClick={loadMore}
+                    className="bg-black text-white py-2 px-4 rounded transition duration-300 ease-in-out hover:bg-gray-800"
+                  >
+                    Load More
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </AdminLayout>
   );

@@ -67,14 +67,6 @@ const Sidebar = () => {
                     </a>
                   </Link>
                 </li>
-                <li>
-                  <Link legacyBehavior href="/admin/submissions/join-us">
-                    <a className="flex items-center p-4 hover:bg-white hover:text-black">
-                      <FaList className="mr-3" />
-                      Join-Us Form
-                    </a>
-                  </Link>
-                </li>
               </ul>
             )}
           </li>

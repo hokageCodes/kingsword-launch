@@ -1,0 +1,23 @@
+/* Global styles for consistent box-sizing */
+* {
+    box-sizing: border-box;
+  }
+  
+  .container {
+    overflow: hidden; /* Prevents overflow */
+  }
+  
+  .bg-white {
+    overflow: hidden; /* Prevents overflow in specific elements */
+  }
+  
+  .grid {
+    overflow: hidden; /* Ensure grid container doesn’t overflow */
+  }
+  
+  /* Ensure buttons and other elements don’t cause overflow */
+  button {
+    max-width: 100%;
+    overflow: hidden;
+  }
+  

@@ -1,9 +1,15 @@
-import { initializeApp, FirebaseApp } from 'firebase/app';
-import { getFirestore, Firestore, collection, addDoc, getDocs, getDoc, deleteDoc, doc } from 'firebase/firestore';
-import { getAuth, Auth, signInWithEmailAndPassword } from 'firebase/auth';
-import { getStorage } from 'firebase/storage';
+import { initializeApp, FirebaseApp } from "firebase/app";
+import { getFirestore, Firestore, collection, addDoc, getDocs, getDoc, deleteDoc, doc } from "firebase/firestore";
+import { getAuth, Auth, signInWithEmailAndPassword } from "firebase/auth";
+import { getStorage } from "firebase/storage"; // Correct import
+import { getAnalytics, Analytics } from "firebase/analytics";
 
-// Firebase configuration
+let app: FirebaseApp | undefined;
+let db: Firestore | undefined;
+let auth: Auth | undefined;
+let storage: ReturnType<typeof getStorage> | undefined; // Use ReturnType to type storage
+let analytics: Analytics | undefined;
+
 const firebaseConfig = {
   apiKey: "AIzaSyAuny5xpmnG3WJ66hPi3RtunJVFXPm1AcM",
   authDomain: "kingsword-canada.firebaseapp.com",
@@ -14,12 +20,13 @@ const firebaseConfig = {
   measurementId: "G-PKX3ZF67W3"
 };
 
-// Initialize Firebase
-const app: FirebaseApp = initializeApp(firebaseConfig);
+// Initialize Firebase only if it's not already initialized
+if (typeof window !== "undefined" && !app) {
+  app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  auth = getAuth(app);
+  storage = getStorage(app); // Initialize Firebase Storage
+  analytics = getAnalytics(app);
+}
 
-// Initialize Firestore, Storage, Auth, and Analytics
-const db: Firestore = getFirestore(app);
-const storage = getStorage(app);
-const auth: Auth = getAuth(app);
-
-export { app, db, storage, auth, collection, addDoc, getDocs, getDoc, deleteDoc, doc, signInWithEmailAndPassword, firebaseConfig };
+export { db, collection, addDoc, getDocs, getDoc, deleteDoc, doc, auth, signInWithEmailAndPassword, storage, firebaseConfig };

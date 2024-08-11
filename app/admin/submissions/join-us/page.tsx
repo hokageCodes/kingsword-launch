@@ -112,7 +112,7 @@ const JoinUsPage = () => {
             <button
               key={group.value}
               onClick={() => setSelectedGroup(group.value)}
-              className={`px-4 py-2 mr-2 ${selectedGroup === group.value ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'} rounded hover:bg-blue-600 transition`}
+              className={`px-4 py-2 mr-2 m-2 ${selectedGroup === group.value ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800'} rounded hover:bg-blue-600 transition`}
             >
               {group.title}
             </button>
