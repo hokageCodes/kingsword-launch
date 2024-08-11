@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
