@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -8,7 +9,7 @@ import * as Yup from 'yup';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { db } from '../../firebaseConfig'; // Adjust the path as necessary
-import { collection, addDoc, getDocs, Firestore, CollectionReference, DocumentData } from 'firebase/firestore';
+import { collection, addDoc } from 'firebase/firestore';
 
 // Define the type for your group
 interface Group {
@@ -38,7 +39,6 @@ const ConnectPage: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedGroup, setSelectedGroup] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-    const [connectForms, setConnectForms] = useState<any[]>([]);
 
     const openModal = (groupTitle: string) => {
         setSelectedGroup(groupTitle);
@@ -50,26 +50,6 @@ const ConnectPage: React.FC = () => {
     };
 
     useEffect(() => {
-        const fetchConnectForms = async () => {
-            try {
-                if (!db) {
-                    throw new Error('Firestore is not initialized.');
-                }
-                const connectFormCollection = collection(db, 'connect-form') as CollectionReference<DocumentData>;
-                const querySnapshot = await getDocs(connectFormCollection);
-                const forms = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                setConnectForms(forms);
-            } catch (error) {
-                const errorMessage = (error as Error).message || 'An unexpected error occurred.';
-                console.error('Error fetching connect forms:', errorMessage);
-                toast.error('Failed to fetch connect forms.');
-            }
-        };
-    
-        fetchConnectForms();
-    }, []);
-
-    useEffect(() => {
         const timeoutId = setTimeout(() => setIsLoading(false), 2000); // Simulate a delay
         return () => clearTimeout(timeoutId);
     }, []);
@@ -78,13 +58,11 @@ const ConnectPage: React.FC = () => {
         initialValues: {
             name: '',
             email: '',
-            phoneNumber: '',
             details: '',
         },
         validationSchema: Yup.object({
             name: Yup.string().max(50, 'Must be 50 characters or less').required('Required'),
             email: Yup.string().email('Invalid email address').required('Required'),
-            phoneNumber: Yup.string().matches(/^[0-9]+$/, 'Phone number must be numeric').required('Required'),
             details: Yup.string().max(500, 'Must be 500 characters or less').required('Required'),
         }),
         onSubmit: async (values, { resetForm, setSubmitting }) => {
@@ -92,16 +70,11 @@ const ConnectPage: React.FC = () => {
                 if (!db) {
                     throw new Error('Firestore is not initialized.');
                 }
-                const joinUsCollection = collection(db as Firestore, 'join-us') as CollectionReference<DocumentData>;
-                await addDoc(joinUsCollection, {
-                    ...values,
-                    group: selectedGroup
-                });
+                // Add form data to Firestore
+                await addDoc(collection(db, 'connect-form'), values);
                 toast.success("Thank you for reaching out!");
-                closeModal(); // Close modal after successful submission
             } catch (error) {
-                const errorMessage = (error as Error).message || 'An unexpected error occurred.';
-                toast.error(errorMessage);
+                toast.error("Something went wrong. Please try again.");
             } finally {
                 setSubmitting(false);
                 resetForm();
@@ -175,77 +148,82 @@ const ConnectPage: React.FC = () => {
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 flex justify-center items-center">
                     <div className="bg-white p-6 rounded-lg shadow-xl">
                         <h2 className="text-xl font-bold mb-4">Join {selectedGroup}</h2>
-                        <form onSubmit={formik.handleSubmit}>
-                            <input
-                                type="text"
-                                id="name"
-                                name="name"
-                                placeholder="Name"
-                                value={formik.values.name}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                className={`block w-full mb-3 px-3 py-2 border rounded ${formik.touched.name && formik.errors.name ? 'border-red-500' : ''}`}
-                            />
-                            {formik.touched.name && formik.errors.name ? (
-                                <div className="text-red-500 text-xs mb-2">{formik.errors.name}</div>
-                            ) : null}
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                placeholder="Email"
-                                value={formik.values.email}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                className={`block w-full mb-3 px-3 py-2 border rounded ${formik.touched.email && formik.errors.email ? 'border-red-500' : ''}`}
-                            />
-                            {formik.touched.email && formik.errors.email ? (
-                                <div className="text-red-500 text-xs mb-2">{formik.errors.email}</div>
-                            ) : null}
-                            <input
-                                type="text"
-                                id="phoneNumber"
-                                name="phoneNumber"
-                                placeholder="Phone Number"
-                                value={formik.values.phoneNumber}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                className={`block w-full mb-3 px-3 py-2 border rounded ${formik.touched.phoneNumber && formik.errors.phoneNumber ? 'border-red-500' : ''}`}
-                            />
-                            {formik.touched.phoneNumber && formik.errors.phoneNumber ? (
-                                <div className="text-red-500 text-xs mb-2">{formik.errors.phoneNumber}</div>
-                            ) : null}
-                            <textarea
-                                id="details"
-                                name="details"
-                                placeholder="Details"
-                                rows={4}
-                                value={formik.values.details}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                className={`block w-full mb-3 px-3 py-2 border rounded ${formik.touched.details && formik.errors.details ? 'border-red-500' : ''}`}
-                            />
-                            {formik.touched.details && formik.errors.details ? (
-                                <div className="text-red-500 text-xs mb-2">{formik.errors.details}</div>
-                            ) : null}
-                            <button
-                                type="submit"
-                                className="w-full py-2 px-4 bg-black text-white rounded hover:bg-gray-800 transition duration-300"
-                                disabled={formik.isSubmitting}
-                            >
-                                {formik.isSubmitting ? 'Submitting...' : 'Submit'}
-                            </button>
+                        <form>
+                            <input type="text" placeholder="Name" className="block w-full mb-3 px-3 py-2 border rounded" />
+                            <input type="email" placeholder="Email" className="block w-full mb-3 px-3 py-2 border rounded" />
+                            <input type="tel" placeholder="Phone Number" className="block w-full mb-3 px-3 py-2 border rounded" />
+                            <button type="button" onClick={closeModal} className="mr-4 py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-700">Cancel</button>
+                            <button type="submit" className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700">Submit</button>
                         </form>
-                        <button
-                            onClick={closeModal}
-                            className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-                        >
-                            &times;
-                        </button>
                     </div>
                 </div>
             )}
 
+            {/* Contact Form */}
+            <div className="bg-white p-6 rounded-lg shadow-xl mt-8 max-w-4xl mx-auto">
+                <h2 className="text-xl font-bold mb-4">Need to someone to pray with you, Have a Bible question or Do you need to meet and talk? Please reach out using the form below:</h2>
+                <form onSubmit={formik.handleSubmit}>
+                    <div className="mb-6">
+                        <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Full Name:</label>
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={formik.values.name}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            required
+                            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${formik.touched.name && formik.errors.name ? 'border-red-500' : ''}`}
+                        />
+                        {formik.touched.name && formik.errors.name ? (
+                            <div className="text-red-500 text-xs mt-1">{formik.errors.name}</div>
+                        ) : null}
+                    </div>
+                    <div className="mb-6">
+                        <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email Address:</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            required
+                            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${formik.touched.email && formik.errors.email ? 'border-red-500' : ''}`}
+                        />
+                        {formik.touched.email && formik.errors.email ? (
+                            <div className="text-red-500 text-xs mt-1">{formik.errors.email}</div>
+                        ) : null}
+                    </div>
+                    <div className="mb-6">
+                        <label htmlFor="details" className="block text-gray-700 text-sm font-bold mb-2">Additional Details:</label>
+                        <textarea
+                            id="details"
+                            name="details"
+                            value={formik.values.details}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            required
+                            rows={4}
+                            className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${formik.touched.details && formik.errors.details ? 'border-red-500' : ''}`}
+                        />
+                        {formik.touched.details && formik.errors.details ? (
+                            <div className="text-red-500 text-xs mt-1">{formik.errors.details}</div>
+                        ) : null}
+                    </div>
+                    <div className="flex items-center justify-between">
+                        <button
+                            type="submit"
+                            disabled={formik.isSubmitting}
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                            {formik.isSubmitting ? 'Submitting...' : 'Submit'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {/* Toast Notifications */}
             <ToastContainer />
         </div>
     );
