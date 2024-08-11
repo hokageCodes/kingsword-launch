@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -8,7 +9,7 @@ import * as Yup from 'yup';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { db } from '../../firebaseConfig'; // Adjust the path as necessary
-import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { collection, addDoc, getDocs, Firestore, CollectionReference, DocumentData } from 'firebase/firestore';
 
 // Define the type for your group
 interface Group {
@@ -55,11 +56,13 @@ const ConnectPage: React.FC = () => {
                 if (!db) {
                     throw new Error('Firestore is not initialized.');
                 }
-                const querySnapshot = await getDocs(collection(db, 'connect-form'));
+                const connectFormCollection = collection(db as Firestore, 'connect-form') as CollectionReference<DocumentData>;
+                const querySnapshot = await getDocs(connectFormCollection);
                 const forms = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 setConnectForms(forms);
             } catch (error) {
-                console.error('Error fetching connect forms:', error.message);
+                const errorMessage = (error as Error).message || 'An unexpected error occurred.';
+                console.error('Error fetching connect forms:', errorMessage);
                 toast.error('Failed to fetch connect forms.');
             }
         };
@@ -90,15 +93,16 @@ const ConnectPage: React.FC = () => {
                 if (!db) {
                     throw new Error('Firestore is not initialized.');
                 }
-                // Add form data to Firestore
-                await addDoc(collection(db, 'join-us'), {
+                const joinUsCollection = collection(db as Firestore, 'join-us') as CollectionReference<DocumentData>;
+                await addDoc(joinUsCollection, {
                     ...values,
                     group: selectedGroup
                 });
                 toast.success("Thank you for reaching out!");
                 closeModal(); // Close modal after successful submission
             } catch (error) {
-                toast.error("Something went wrong. Please try again.");
+                const errorMessage = (error as Error).message || 'An unexpected error occurred.';
+                toast.error(errorMessage);
             } finally {
                 setSubmitting(false);
                 resetForm();
