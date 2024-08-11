@@ -3,12 +3,6 @@ import { getFirestore, Firestore, addDoc, collection, deleteDoc, doc, getDoc, ge
 import { getAuth, Auth, signInWithEmailAndPassword } from "firebase/auth";
 import { getStorage, FirebaseStorage } from "firebase/storage";
 
-// Declare variables with initial value as undefined
-let app: FirebaseApp | undefined;
-let db: Firestore | undefined;
-let auth: Auth | undefined;
-let storage: FirebaseStorage | undefined;
-
 const firebaseConfig = {
   apiKey: "AIzaSyAuny5xpmnG3WJ66hPi3RtunJVFXPm1AcM",
   authDomain: "kingsword-canada.firebaseapp.com",
@@ -19,17 +13,18 @@ const firebaseConfig = {
   measurementId: "G-PKX3ZF67W3"
 };
 
-// Initialize Firebase only if it's not already initialized
-if (typeof window !== "undefined" && !app) {
+let app: FirebaseApp;
+let db: Firestore;
+let auth: Auth;
+let storage: FirebaseStorage;
+
+if (typeof window !== "undefined") {
   app = initializeApp(firebaseConfig);
   db = getFirestore(app);
   auth = getAuth(app);
   storage = getStorage(app);
-}
-
-// Check if Firebase services are initialized before exporting
-if (!app || !db || !auth || !storage) {
-  throw new Error("Firebase services are not properly initialized");
+} else {
+  throw new Error("Firebase can only be initialized on the client-side");
 }
 
 export { db, collection, addDoc, getDocs, getDoc, deleteDoc, doc, auth, signInWithEmailAndPassword, storage };
