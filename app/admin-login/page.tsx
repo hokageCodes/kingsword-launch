@@ -12,6 +12,13 @@ const AdminLoginForm = () => {
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Check if auth is defined
+        if (!auth) {
+            setError('Authentication service is not available.');
+            return;
+        }
+
         try {
             await signInWithEmailAndPassword(auth, email, password);
             router.push('/admin'); // Redirect to admin page on success
