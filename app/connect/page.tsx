@@ -56,7 +56,7 @@ const ConnectPage: React.FC = () => {
                 if (!db) {
                     throw new Error('Firestore is not initialized.');
                 }
-                const connectFormCollection = collection(db as Firestore, 'connect-form') as CollectionReference<DocumentData>;
+                const connectFormCollection = collection(db, 'connect-form') as CollectionReference<DocumentData>;
                 const querySnapshot = await getDocs(connectFormCollection);
                 const forms = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 setConnectForms(forms);
@@ -66,7 +66,7 @@ const ConnectPage: React.FC = () => {
                 toast.error('Failed to fetch connect forms.');
             }
         };
-
+    
         fetchConnectForms();
     }, []);
 
