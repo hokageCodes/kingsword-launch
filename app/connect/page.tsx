@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -9,7 +8,7 @@ import * as Yup from 'yup';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { db } from '../../firebaseConfig'; // Adjust the path as necessary
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 
 // Define the type for your group
 interface Group {
@@ -39,6 +38,7 @@ const ConnectPage: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedGroup, setSelectedGroup] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [connectForms, setConnectForms] = useState<any[]>([]);
 
     const openModal = (groupTitle: string) => {
         setSelectedGroup(groupTitle);
@@ -48,6 +48,24 @@ const ConnectPage: React.FC = () => {
     const closeModal = () => {
         setShowModal(false);
     };
+
+    useEffect(() => {
+        const fetchConnectForms = async () => {
+            try {
+                if (!db) {
+                    throw new Error('Firestore is not initialized.');
+                }
+                const querySnapshot = await getDocs(collection(db, 'connect-form'));
+                const forms = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                setConnectForms(forms);
+            } catch (error) {
+                console.error('Error fetching connect forms:', error.message);
+                toast.error('Failed to fetch connect forms.');
+            }
+        };
+
+        fetchConnectForms();
+    }, []);
 
     useEffect(() => {
         const timeoutId = setTimeout(() => setIsLoading(false), 2000); // Simulate a delay
@@ -182,7 +200,7 @@ const ConnectPage: React.FC = () => {
                                 <div className="text-red-500 text-xs mb-2">{formik.errors.email}</div>
                             ) : null}
                             <input
-                                type="tel"
+                                type="text"
                                 id="phoneNumber"
                                 name="phoneNumber"
                                 placeholder="Phone Number"
@@ -198,6 +216,7 @@ const ConnectPage: React.FC = () => {
                                 id="details"
                                 name="details"
                                 placeholder="Details"
+                                rows={4}
                                 value={formik.values.details}
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
@@ -208,15 +227,15 @@ const ConnectPage: React.FC = () => {
                             ) : null}
                             <button
                                 type="submit"
+                                className="w-full py-2 px-4 bg-black text-white rounded hover:bg-gray-800 transition duration-300"
                                 disabled={formik.isSubmitting}
-                                className={`w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300 ${formik.isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
                                 {formik.isSubmitting ? 'Submitting...' : 'Submit'}
                             </button>
                         </form>
                         <button
                             onClick={closeModal}
-                            className="absolute top-0 right-0 mt-2 mr-2 text-gray-600 hover:text-gray-800"
+                            className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
                         >
                             &times;
                         </button>
