@@ -1,3 +1,4 @@
+// ConnectFormPage.tsx
 "use client";
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '../../Layout';
@@ -7,14 +8,14 @@ import { db, collection, getDocs, deleteDoc, doc } from '../../../../firebaseCon
 import { saveAs } from 'file-saver';
 
 interface ConnectForm {
-  id: string; // Add an id field for deletion
+  id: string;
   name: string;
   email: string;
   phone: string;
   details: string;
 }
 
-const ConnectFormPage = () => {
+const ConnectFormPage: React.FC = () => {
   const [connectForms, setConnectForms] = useState<ConnectForm[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,6 +26,9 @@ const ConnectFormPage = () => {
   useEffect(() => {
     const fetchConnectForms = async () => {
       try {
+        if (!db) {
+          throw new Error('Firestore instance is not initialized');
+        }
         const querySnapshot = await getDocs(collection(db, 'connect-form'));
         const forms = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }) as ConnectForm);
         setConnectForms(forms);
@@ -57,6 +61,9 @@ const ConnectFormPage = () => {
 
   const handleDelete = async (id: string) => {
     try {
+      if (!db) {
+        throw new Error('Firestore instance is not initialized');
+      }
       await deleteDoc(doc(db, 'connect-form', id));
       setConnectForms(connectForms.filter(form => form.id !== id));
     } catch (error) {
