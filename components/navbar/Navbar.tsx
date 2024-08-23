@@ -41,6 +41,9 @@ const NavBar: React.FC = () => {
                         <Link href="/connect" className="nav-link" onClick={closeMenu}>Connect</Link>
                     </li>
                     <li className="nav-item">
+                        <Link href="/sc-2024" className="nav-link" onClick={closeMenu}>SC 2024</Link>
+                    </li>
+                    <li className="nav-item">
                         <Link href="/listen" className="nav-link" onClick={closeMenu}>Listen</Link>
                     </li>
                     <li className="nav-item">
