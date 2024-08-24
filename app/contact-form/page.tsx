@@ -1,4 +1,3 @@
-"use client";
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -47,6 +46,7 @@ const ContactForm: React.FC = () => {
         resetForm();
       } catch (error) {
         toast.error("Failed to submit. Please try again.");
+        console.error("Error submitting form:", error); // Added error logging
       } finally {
         setSubmitting(false);
       }
