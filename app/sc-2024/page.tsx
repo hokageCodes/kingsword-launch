@@ -3,6 +3,9 @@ import { Parallax } from 'react-parallax';
 import CountdownTimer from '../../components/countdown/Count';
 import SCInfo from '../../components/sc-info/SCInfo';
 import EventSchedule from '../../components/sc-schedule/SCSchedule';
+import ReflectionSection from '../../components/reflect/Reflect';
+import MinistersSection from '../../components/ministers-section/MinistersSection';
+import SummerCanadaPhotos from '../../components/summer-canada/SummerCanadaPhotos';
 
 const HeroSection = () => {
   return (
@@ -34,6 +37,15 @@ const HeroSection = () => {
       </div>
       <div className='mt-24'>
         <EventSchedule />
+      </div>
+      <div className='mt-24'>
+        <ReflectionSection />
+      </div>
+      <div className='mt-24'>
+        <MinistersSection />
+      </div>
+      <div className='mt-24'>
+        <SummerCanadaPhotos />
       </div>
     </>
   );

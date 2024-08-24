@@ -9,22 +9,10 @@ const EventScheduleSection = () => {
       date: 'September 6, 2024',
       sessions: [
         {
-          session: 'Morning',
-          theme: 'Opening Ceremony & Worship',
-          time: '9:00 AM - 12:00 PM',
-          ministers: ['Pastor John Doe', 'Minister Jane Smith'],
-        },
-        {
-          session: 'Afternoon',
-          theme: 'Workshops & Seminars',
-          time: '1:00 PM - 4:00 PM',
-          ministers: ['Dr. Alex Brown', 'Rev. Lisa Green'],
-        },
-        {
           session: 'Evening',
-          theme: 'Networking & Dinner',
-          time: '6:00 PM - 9:00 PM',
-          ministers: ['Bishop David White'],
+          theme: 'Worship Night',
+          time: '6:30 PM',
+          ministers: ['Pastor Muyiwa Oseni', 'Dr Kay Ijisesan', 'Pst Dotun Oragbade', 'Eben'],
         },
       ],
     },
@@ -34,21 +22,9 @@ const EventScheduleSection = () => {
       sessions: [
         {
           session: 'Morning',
-          theme: 'Spiritual Growth & Development',
-          time: '9:00 AM - 12:00 PM',
-          ministers: ['Rev. Samuel Adams', 'Sister Anna Lee'],
-        },
-        {
-          session: 'Afternoon',
-          theme: 'Panel Discussions',
-          time: '1:00 PM - 4:00 PM',
-          ministers: ['Pastor Michael Johnson', 'Elder Grace Owens'],
-        },
-        {
-          session: 'Evening',
-          theme: 'Praise & Worship Night',
-          time: '6:00 PM - 9:00 PM',
-          ministers: ['Minister Paul Roberts', 'Choir Group'],
+          theme: 'Word Feast',
+          time: '11:00 AM',
+          ministers: ['Pastor Muyiwa Oseni', 'Dr Kay Ijisesan', 'Pst Dotun Oragbade', 'Eben'],
         },
       ],
     },
@@ -58,28 +34,16 @@ const EventScheduleSection = () => {
       sessions: [
         {
           session: 'Morning',
-          theme: 'Sunday Service',
-          time: '9:00 AM - 12:00 PM',
-          ministers: ['Pastor Chris Martin', 'Rev. Sarah Parker'],
-        },
-        {
-          session: 'Afternoon',
-          theme: 'Youth Forum',
-          time: '1:00 PM - 4:00 PM',
-          ministers: ['Youth Minister Kevin Lee', 'Sister Laura James'],
-        },
-        {
-          session: 'Evening',
-          theme: 'Closing Ceremony',
-          time: '6:00 PM - 9:00 PM',
-          ministers: ['Bishop William Scott'],
+          theme: 'Celebration Service',
+          time: '9:30 AM',
+          ministers: ['Pastor Muyiwa Oseni', 'Dr Kay Ijisesan', 'Pst Dotun Oragbade', 'Eben'],
         },
       ],
     },
   ];
 
   return (
-    <section className="py-16 px-4">
+    <section className="px-4">
       <div className="max-w-xl mx-auto text-center">
         <h2 className="text-4xl font-bold text-center mb-8">Event Schedule</h2>
 

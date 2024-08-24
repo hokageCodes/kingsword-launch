@@ -42,3 +42,15 @@
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Optional: Add shadow for better readability */
   }
   
+
+
+  /* styles/globals.css or a CSS module */
+.masonry-grid {
+  column-count: 4;
+  column-gap: 1rem;
+}
+
+.masonry-item {
+  display: inline-block;
+  width: 100%;
+}
