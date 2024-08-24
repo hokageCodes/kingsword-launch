@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { initializeApp, FirebaseApp } from "firebase/app";
 import { getFirestore, Firestore, addDoc, collection, deleteDoc, doc, getDoc, getDocs } from "firebase/firestore";
 import { getAuth, Auth, signInWithEmailAndPassword } from "firebase/auth";
@@ -29,8 +29,9 @@ if (typeof window !== "undefined" && !app) {
 }
 
 // Check if Firebase services are initialized before exporting
-if (!app || !db || !auth || !storage) {
+if (!db || !auth || !storage) {
   throw new Error("Firebase services are not properly initialized");
 }
 
+// Export Firebase services
 export { db, collection, addDoc, getDocs, getDoc, deleteDoc, doc, auth, signInWithEmailAndPassword, storage };
