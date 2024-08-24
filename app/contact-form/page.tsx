@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -36,17 +38,13 @@ const ContactForm: React.FC = () => {
     }),
     onSubmit: async (values, { resetForm, setSubmitting }) => {
       try {
-        if (!db) {
-          throw new Error('Firestore is not initialized');
-        }
-
         // Add document to Firestore
         await addDoc(collection(db, 'contactForm'), values);
         toast.success("Thank you for contacting us!");
         resetForm();
       } catch (error) {
         toast.error("Failed to submit. Please try again.");
-        console.error("Error submitting form:", error); // Added error logging
+        console.error("Error submitting form:", error); // Logging error
       } finally {
         setSubmitting(false);
       }
