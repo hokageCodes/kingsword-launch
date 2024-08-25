@@ -1,7 +1,7 @@
 "use client";
 
 import { initializeApp, FirebaseApp } from "firebase/app";
-import { getFirestore, Firestore, addDoc, collection, deleteDoc, doc, getDoc, getDocs } from "firebase/firestore";
+import { getFirestore, Firestore, addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, orderBy,serverTimestamp } from "firebase/firestore";
 import { getAuth, Auth, signInWithEmailAndPassword } from "firebase/auth";
 import { getStorage, FirebaseStorage } from "firebase/storage";
 
@@ -14,7 +14,7 @@ let storage: FirebaseStorage;
 const firebaseConfig = {
   apiKey: "AIzaSyAuny5xpmnG3WJ66hPi3RtunJVFXPm1AcM",
   authDomain: "kingsword-canada.firebaseapp.com",
-  projectId: "kingsword-canada",
+  projectId: "kingsword-canada",    
   storageBucket: "kingsword-canada.appspot.com",
   messagingSenderId: "48460646446",
   appId: "1:48460646446:web:c3b0baea1384d5ccb477bf",
@@ -45,5 +45,8 @@ export {
   doc,
   auth,
   signInWithEmailAndPassword,
-  storage
+  storage,
+  query,
+  orderBy,
+  serverTimestamp
 };

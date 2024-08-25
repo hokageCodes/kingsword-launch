@@ -12,6 +12,7 @@ interface FormData {
   email?: string;
   phone?: string;
   details?: string;
+  group?: string; // Added to handle data from group-form
 }
 
 const consolidateData = (data: FormData[][]) => {
@@ -27,7 +28,7 @@ const OverviewPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const collections = ['connect-form', 'contactForm', 'volunteers', 'worshipForm'];
+        const collections = ['connect-form', 'contactForm', 'volunteers', 'worshipForm', 'group-form'];
         const fetchPromises = collections.map(async (col) => {
           const querySnapshot = await getDocs(collection(db, col));
           return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as FormData));
@@ -65,13 +66,14 @@ const OverviewPage = () => {
         <h1 className="text-2xl font-semibold mb-4">Submissions Overview</h1>
         
         {loading ? (
-          <Skeleton count={4} height={50} />
+          <Skeleton count={5} height={50} />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             <div className="bg-white p-6 rounded shadow">
               <h2 className="text-lg font-semibold">Connect Form</h2>
               <p className="text-2xl font-bold">{counts['connect-form'] || 0}</p>
               <p>Total submissions</p>
+              {/* Uncomment to enable button */}
               {/* <button
                 onClick={() => handleViewDetails('connect-form')}
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
@@ -83,6 +85,7 @@ const OverviewPage = () => {
               <h2 className="text-lg font-semibold">Contact Form</h2>
               <p className="text-2xl font-bold">{counts['contactForm'] || 0}</p>
               <p>Total submissions</p>
+              {/* Uncomment to enable button */}
               {/* <button
                 onClick={() => handleViewDetails('contactForm')}
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
@@ -94,6 +97,7 @@ const OverviewPage = () => {
               <h2 className="text-lg font-semibold">Volunteers</h2>
               <p className="text-2xl font-bold">{counts['volunteers'] || 0}</p>
               <p>Total submissions</p>
+              {/* Uncomment to enable button */}
               {/* <button
                 onClick={() => handleViewDetails('volunteers')}
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
@@ -105,8 +109,21 @@ const OverviewPage = () => {
               <h2 className="text-lg font-semibold">Worship Form</h2>
               <p className="text-2xl font-bold">{counts['worshipForm'] || 0}</p>
               <p>Total submissions</p>
+              {/* Uncomment to enable button */}
               {/* <button
                 onClick={() => handleViewDetails('worshipForm')}
+                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+              >
+                View Details
+              </button> */}
+            </div>
+            <div className="bg-white p-6 rounded shadow">
+              <h2 className="text-lg font-semibold">Group Form</h2>
+              <p className="text-2xl font-bold">{counts['group-form'] || 0}</p>
+              <p>Total submissions</p>
+              {/* Uncomment to enable button */}
+              {/* <button
+                onClick={() => handleViewDetails('group-form')}
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
               >
                 View Details

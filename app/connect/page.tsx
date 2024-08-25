@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
@@ -11,34 +10,35 @@ import 'react-toastify/dist/ReactToastify.css';
 import { db } from '../../firebaseConfig'; // Adjust the path as necessary
 import { collection, addDoc } from 'firebase/firestore';
 
-// Define the type for your group
 interface Group {
     title: string;
     imageUrl: string;
     buttonText: string;
-    link: string; 
+    link: string;
 }
 
-// Define the groups array with the specified type
 const groups: Group[] = [
     { title: 'Small Groups', imageUrl: '/assets/conn1.webp', buttonText: 'Join now', link: '/small-groups' },
     { title: 'Service Teams', imageUrl: '/assets/conn2.webp', buttonText: 'Join now', link: '/service-teams' },
     { title: "Children's Ministry", imageUrl: '/assets/conn3.webp', buttonText: 'Get Involved', link: '/childrens-ministry' },
     { title: 'KMI Partners', imageUrl: '/assets/conn4.webp', buttonText: 'Get Involved', link: '/kmi-partners' },
     { title: "Men's Group", imageUrl: '/assets/conn5.webp', buttonText: 'Join now', link: '/mens-group' },
-    { title: "Women's Group", imageUrl: '/assets/conn6.webp', buttonText: 'Join now', link: '/womens-group' },
+    { title: "Women's Group", imageUrl: '/assets/women.png', buttonText: 'Join now', link: '/womens-group' },
     { title: 'His & Hers', imageUrl: '/assets/conn7.webp', buttonText: 'More Details', link: '/his-hers' },
     { title: 'Mr. & Mrs.', imageUrl: '/assets/conn8.webp', buttonText: 'More Details', link: '/mr-mrs' },
-    { title: 'Career Advocacy Network - CAN', imageUrl: '/assets/conn4.webp', buttonText: 'More Details', link: '/career-advocacy-network' },
-    { title: 'Business Advocacy Network', imageUrl: '/assets/conn6.webp', buttonText: 'More Details', link: '/business-advocacy-network' },
-    { title: 'Marriage Advocacy Network', imageUrl: '/assets/conn7.webp', buttonText: 'More Details', link: '/marriage-advocacy-network' },
-    { title: 'Mental and Total Wholeness', imageUrl: '/assets/conn8.webp', buttonText: 'More Details', link: '/mental-total-wholeness' }
+    { title: 'Career Advocacy Network - CAN', imageUrl: '/assets/career.png', buttonText: 'More Details', link: '/career-advocacy-network' },
+    { title: 'Business Advocacy Network', imageUrl: '/assets/business.png', buttonText: 'More Details', link: '/business-advocacy-network' },
+    { title: 'Marriage Advocacy Network', imageUrl: '/assets/marriage.png', buttonText: 'More Details', link: '/marriage-advocacy-network' },
+    { title: 'Mental and Total Wholeness', imageUrl: '/assets/wholeness.png', buttonText: 'More Details', link: '/mental-total-wholeness' }
 ];
+
 
 const ConnectPage: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
-    const [selectedGroup, setSelectedGroup] = useState('');
+    const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [formSuccess, setFormSuccess] = useState<string | null>(null); // For success message
+    const [isSubmittingGroupForm, setIsSubmittingGroupForm] = useState(false); // For loading state in group form
 
     const openModal = (groupTitle: string) => {
         setSelectedGroup(groupTitle);
@@ -53,6 +53,30 @@ const ConnectPage: React.FC = () => {
         const timeoutId = setTimeout(() => setIsLoading(false), 2000); // Simulate a delay
         return () => clearTimeout(timeoutId);
     }, []);
+
+    const handleGroupFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setIsSubmittingGroupForm(true);
+        const formData = new FormData(event.currentTarget);
+        const values = Object.fromEntries(formData.entries());
+
+        try {
+            if (!db) {
+                throw new Error('Firestore is not initialized.');
+            }
+            // Include selectedGroup in the submission data
+            await addDoc(collection(db, 'group-form'), {
+                ...values,
+                group: selectedGroup // Add the group information here
+            });
+            toast.success("Thank you for joining the group! We will be in touch shortly.");
+            closeModal();
+        } catch (error) {
+            toast.error("Something went wrong. Please try again.");
+        } finally {
+            setIsSubmittingGroupForm(false);
+        }
+    };
 
     const formik = useFormik({
         initialValues: {
@@ -70,9 +94,9 @@ const ConnectPage: React.FC = () => {
                 if (!db) {
                     throw new Error('Firestore is not initialized.');
                 }
-                // Add form data to Firestore
-                await addDoc(collection(db, 'connect-form'), values);
-                toast.success("Thank you for reaching out!");
+                await addDoc(collection(db, 'connect-form'), values); // Save to a different collection
+                toast.success("Thank you for your submission, we will reach out to you shortly.");
+                setFormSuccess("Thank you for your submission, we will reach out to you shortly.");
             } catch (error) {
                 toast.error("Something went wrong. Please try again.");
             } finally {
@@ -143,25 +167,51 @@ const ConnectPage: React.FC = () => {
                 ))}
             </div>
 
-            {/* Modal for Join Form */}
-            {showModal && (
+            {/* Modal for Group Join Form */}
+            {showModal && selectedGroup && (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 flex justify-center items-center">
                     <div className="bg-white p-6 rounded-lg shadow-xl">
                         <h2 className="text-xl font-bold mb-4">Join {selectedGroup}</h2>
-                        <form>
-                            <input type="text" placeholder="Name" className="block w-full mb-3 px-3 py-2 border rounded" />
-                            <input type="email" placeholder="Email" className="block w-full mb-3 px-3 py-2 border rounded" />
-                            <input type="tel" placeholder="Phone Number" className="block w-full mb-3 px-3 py-2 border rounded" />
-                            <button type="button" onClick={closeModal} className="mr-4 py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-700">Cancel</button>
-                            <button type="submit" className="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700">Submit</button>
+                        <form onSubmit={handleGroupFormSubmit}>
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Name"
+                                className="block w-full mb-3 px-3 py-2 border rounded"
+                                required
+                            />
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="Email"
+                                className="block w-full mb-3 px-3 py-2 border rounded"
+                                required
+                            />
+                            <input
+                                type="tel"
+                                name="phone"
+                                placeholder="Phone Number"
+                                className="block w-full mb-3 px-3 py-2 border rounded"
+                                required
+                            />
+                            <button type="button" onClick={closeModal} className="mr-4 py-2 px-4 bg-gray-500 text-white rounded hover:bg-gray-700">
+                                Cancel
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={isSubmittingGroupForm}
+                                className={`py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-700 ${isSubmittingGroupForm ? 'opacity-50 cursor-not-allowed' : ''}`}
+                            >
+                                {isSubmittingGroupForm ? 'Submitting...' : 'Submit'}
+                            </button>
                         </form>
                     </div>
                 </div>
             )}
 
-            {/* Contact Form */}
+            {/* Connect Form */}
             <div className="bg-white p-6 rounded-lg shadow-xl mt-8 max-w-4xl mx-auto">
-                <h2 className="text-xl font-bold mb-4">Need to someone to pray with you, Have a Bible question or Do you need to meet and talk? Please reach out using the form below:</h2>
+                <h2 className="text-xl font-bold mb-4">Need someone to pray with you, have a Bible question, or need to meet and talk? Please reach out using the form below:</h2>
                 <form onSubmit={formik.handleSubmit}>
                     <div className="mb-6">
                         <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Full Name:</label>
@@ -215,12 +265,13 @@ const ConnectPage: React.FC = () => {
                         <button
                             type="submit"
                             disabled={formik.isSubmitting}
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                            className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${formik.isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                             {formik.isSubmitting ? 'Submitting...' : 'Submit'}
                         </button>
                     </div>
                 </form>
+                {formSuccess && <div className="mt-4 text-green-500 font-bold">{formSuccess}</div>}
             </div>
 
             {/* Toast Notifications */}
@@ -230,3 +281,5 @@ const ConnectPage: React.FC = () => {
 };
 
 export default ConnectPage;
+
+

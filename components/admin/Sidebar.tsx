@@ -52,7 +52,15 @@ const Sidebar = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link legacyBehavior href="/admin/submissions//volunteers">
+                  <Link legacyBehavior href="/admin/submissions/group-form">
+                    <a className="flex items-center p-4 hover:bg-white hover:text-black">
+                      <FaUser className="mr-3" />
+                      Group Form
+                    </a>
+                  </Link>
+                </li>
+                <li>
+                  <Link legacyBehavior href="/admin/submissions/volunteers">
                     <a className="flex items-center p-4 hover:bg-white hover:text-black">
                       <FaStar className="mr-3" />
                       Volunteers

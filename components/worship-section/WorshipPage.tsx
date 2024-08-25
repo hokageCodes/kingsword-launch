@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { FaSpinner } from 'react-icons/fa';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseConfig'; // Ensure correct import path
 
 interface FormData {
@@ -27,7 +27,9 @@ const validationSchema = Yup.object({
 
 const WorshipPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
-  
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   useEffect(() => {
     const timeoutId = setTimeout(() => setIsLoading(false), 2000); // Simulate a delay
     return () => clearTimeout(timeoutId);
@@ -41,13 +43,29 @@ const WorshipPage: React.FC = () => {
     }
 
     try {
+      // Check if the email already exists
+      const q = query(collection(db, 'worshipForm'), where('email', '==', values.email));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        // Email already exists
+        setErrorMessage("Email already in use. Please use a different email.");
+        setSuccessMessage(null); // Clear any previous success message
+        setSubmitting(false);
+        return;
+      }
+
       // Add document to Firestore
       const docRef = await addDoc(collection(db, 'worshipForm'), values);
       console.log('Document written with ID: ', docRef.id);
-      toast.success("Form submitted successfully!");
+      toast.success("Thank you for your submission, we will reach out to you shortly");
+      setSuccessMessage("Thank you for your submission, we will reach out to you shortly.");
+      setErrorMessage(null); // Clear any previous error message
     } catch (error) {
       console.error("Error adding document: ", error);
       toast.error("Failed to submit form. Please try again.");
+      setErrorMessage("Failed to submit form. Please try again.");
+      setSuccessMessage(null); // Clear any previous success message
     } finally {
       setSubmitting(false);
     }
@@ -84,6 +102,8 @@ const WorshipPage: React.FC = () => {
         <div className="w-full md:w-1/2 mt-8 md:mt-0">
           <div className="bg-white p-8 rounded-lg shadow-lg">
             <h2 className="text-2xl font-bold mb-6 text-center">Worship with us</h2>
+            {successMessage && <div className="text-green-500 mb-4">{successMessage}</div>}
+            {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
             <Formik
               initialValues={initialValues}
               validationSchema={validationSchema}
