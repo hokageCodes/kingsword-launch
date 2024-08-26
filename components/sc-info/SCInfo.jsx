@@ -9,7 +9,7 @@ const EventInfoSection = () => {
         <div className="grid md:grid-cols-3 gap-8 text-left">
           {/* Date & Time */}
           <div className="bg-white shadow-lg rounded-lg p-6">
-            <h3 className="text-2xl font-bold mb-4 text-black">Date & Time</h3>
+            <h3 className="text-2xl font-bold mb-4 text-black">Date</h3>
             <p className="text-lg mb-2">September 6-8, 2024</p>
             <p className="text-lg">9:00 AM - 6:00 PM Daily</p>
           </div>

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from 'next/link';
-import { FaFacebook, FaGithub, FaInstagram, FaTwitter, FaTwitch, FaYoutube } from "react-icons/fa";
-
+import { FaFacebook, FaInstagram, FaYoutube } from "react-icons/fa";
+import { db } from "../../firebaseConfig";
+import { collection, addDoc } from "firebase/firestore";
 const sections = [
   {
     title: "About Us",
@@ -37,6 +38,33 @@ const items = [
 ];
 
 const Footer = () => {
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false); // New loading state
+
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+
+    if (email) {
+      setLoading(true); // Start loading
+      try {
+        await addDoc(collection(db, "newsletterSubscriptions"), {
+          email: email,
+          timestamp: new Date(),
+        });
+        setMessage("Thank you for subscribing!");
+        setEmail("");  // Clear the input field
+      } catch (error) {
+        console.error("Error adding document: ", error);
+        setMessage("Failed to subscribe. Please try again.");
+      } finally {
+        setLoading(false); // Stop loading
+      }
+    } else {
+      setMessage("Please enter a valid email.");
+    }
+  };
+
   return (
     <footer className="w-full mt-24 bg-black text-gray-300 py-8 px-2">
       <div className="max-w-[1240px] mx-auto grid grid-cols-2 md:grid-cols-6 border-b-2 border-gray-600 py-8">
@@ -65,16 +93,24 @@ const Footer = () => {
           <p className="py-4">
             The latest news, articles, and resources, sent to your inbox weekly.
           </p>
-          <form className="flex flex-col sm:flex-row">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row">
             <input
               className="w-full p-2 mr-4 rounded-md mb-4"
               type="email"
               placeholder="Enter email..."
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading} // Disable input during loading
             />
-            <button type="submit" className="p-2 mb-4 bg-blue-600 text-white rounded hover:bg-blue-700">
-              Subscribe
+            <button
+              type="submit"
+              className={`p-2 mb-4 text-white rounded ${loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
+              disabled={loading} // Disable button during loading
+            >
+              {loading ? "Submitting..." : "Subscribe"}
             </button>
           </form>
+          {message && <p className="text-gray-500 mt-2">{message}</p>}
         </div>
       </div>
 

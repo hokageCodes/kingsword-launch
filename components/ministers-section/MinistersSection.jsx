@@ -4,32 +4,32 @@ import Image from 'next/image';
 const ministers = [
   {
     name: 'Dr. Kay Ijisesan',
-    position: 'Apostle, KingsWord Ministries International',
-    story: 'Dr. Kay Ijisesan is a dynamic preacher and the visionary behind KingsWord Ministries International. He has a passion for empowering believers to fulfill their God-given purpose through sound teaching and the demonstration of the Spirit\'s power.',
+    position: 'Apostle, KingsWord and The New Churches',
+    story: 'Dr. Kay, is the founder and apostle of KingsWord Ministries International and TheNew Churches, overseeing several campuses in Africa, Europe, and North America. Based in Chicago, he is dedicated to raising a Christ-centered, Word-based, Spirit-filled Supernatural Army. For over 25 years, Dr. Kay has been committed to church planting and empowering Christian creatives to impact culture with Christ’s values. He is married to Pastor May, who serves as the Senior Pastor of KingsWord Chicago.',
     image: '/images/dr-kay.jpg', // Replace with the actual image path in your public folder
   },
   {
     name: 'Pastor Dotun Oragbade',
-    position: 'Senior Pastor, KingsWord London',
-    story: 'Pastor Dotun Oragbade is known for his deep insights into God\'s Word and a prophetic ministry that has impacted many lives. He serves as the Senior Pastor of KingsWord London, where he leads with wisdom and grace.',
+    position: 'Senior Pastor, KingsWord Dallas',
+    story: 'Pastor Dotun Oragbade is the Pastor of KingsWord Dallas. He is a church planter and a pastor. He has pastored and led churches in Lagos, London, Chicago and other cities in different parts of the world. He is passionate about teaching Gods word and helping people find expression for their gifts.',
     image: '/images/pastor-dotun.jpg', // Replace with the actual image path in your public folder
   },
   {
     name: 'Pastor Muyiwa Oseni',
-    position: 'Senior Pastor, KingsWord Chicago',
-    story: 'Pastor Muyiwa Oseni has a strong teaching ministry and a heart for discipleship. As the Senior Pastor of KingsWord Chicago, he is committed to raising believers who will influence their world for Christ.',
-    image: '/assets/muyi.jpg', // Replace with the actual image path in your public folder
+    position: 'Senior Pastor, KingsWord Calgary',
+    story: 'Pastor Muyiwa Oseni is the Senior Pastor of KingsWord Calgary. He is a teacher of the Word and a pastor. He has pastored and led churches in Nigeria, including campus and youth churches, and was the Director of the KingsWord Training Institute. Pastor Muyiwa is passionate about teaching God’s Word with simplicity and helping people apply the Word of God in a practical way. He is also a chartered accountant and a business and risk consultant.',
+    image: '/assets/muyi.jpg',
   },
   {
     name: 'Eben',
-    position: 'Renowned Worship Leader',
+    position: '“Guest Minister',
     story: 'Eben is a globally recognized worship leader whose songs have become anthems in churches around the world. His ministry is marked by a deep passion for leading people into the presence of God through worship.',
     image: '/assets/eben.jpg', // Replace with the actual image path in your public folder
   },
   {
     name: 'The Kings Heartbeat',
-    position: 'Worship Band',
-    story: 'The King\'s Heartbeat is the worship band of KingsWord Ministries. They are known for their anointed music and powerful worship sessions that create an atmosphere for the supernatural.',
+    position: 'Worship Team',
+    story: 'The King’s Heartbeat is the worship team of KingsWord Ministries in Canada. They are known for their anointed music and powerful worship sessions that create an atmosphere for the supernatural. The King’s Heartbeat will be leading us in anointed worship sessions at Supernatural Canada.',
     image: '/assets/heartbeat.jpg', // Replace with the actual image path in your public folder
   },
 ];
@@ -59,8 +59,8 @@ const MinistersSection = () => {
         </div>
         <div className="text-center mt-12">
           <a
-            href="#register" // Replace with the actual registration link
-            className="inline-block bg-[#000] text-white py-3 px-6 rounded-full text-lg font-semibold transition duration-300 hover:bg-[#5e3c63]"
+            href="https://kingswordcalgary.churchcenter.com/registrations/events/2441136" // Replace with the actual registration link
+            className="inline-block bg-[#000] text-white py-3 px-6 rounded-full text-lg font-semibold transition duration-300 hover:bg-[#5e3c63]" target='_blank'
           >
             Register Now
           </a>

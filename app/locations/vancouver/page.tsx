@@ -12,7 +12,7 @@ const VancouverPage: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto">
       {/* First Section */}
-      <div className="flex flex-wrap md:flex-nowrap mb-24">
+      <div className="flex flex-wrap md:flex-nowrap mb-24 mt-12">
         <div className="md:w-1/2 p-8">
           <h1 className="text-3xl font-bold mb-4 mt-24">KingsWord, Vancouver</h1>
           <p>KingsWord International Church, Vancouver, is one of the branches of KingsWord Ministries International.</p>
@@ -26,7 +26,7 @@ const VancouverPage: React.FC = () => {
         <div className="md:w-1/2">
           <Suspense fallback={<Skeleton height={400} />}>
             <Image
-              src="/assets/ima.webp"
+              src="/assets/vancouver/1.webp"
               alt="Church Image"
               width={600} // Adjust width as needed
               height={400} // Adjust height as needed
@@ -41,7 +41,7 @@ const VancouverPage: React.FC = () => {
         <div className="md:w-1/2">
           <Suspense fallback={<Skeleton height={400} />}>
             <Image
-              src="/assets/ima.webp"
+              src="/assets/vancouver/2.webp"
               alt="Pastor Image"
               width={600} // Adjust width as needed
               height={400} // Adjust height as needed
@@ -62,7 +62,7 @@ const VancouverPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Suspense fallback={<Skeleton height={300} />}>
             <Image
-              src="/assets/ima.webp"
+              src="/assets/vancouver/3.webp"
               alt="Church Event 1"
               width={500} // Adjust width as needed
               height={300} // Adjust height as needed
@@ -71,7 +71,7 @@ const VancouverPage: React.FC = () => {
           </Suspense>
           <Suspense fallback={<Skeleton height={300} />}>
             <Image
-              src="/assets/ima.webp"
+              src="/assets/vancouver/4.webp"
               alt="Church Event 2"
               width={500} // Adjust width as needed
               height={300} // Adjust height as needed
@@ -80,7 +80,7 @@ const VancouverPage: React.FC = () => {
           </Suspense>
           <Suspense fallback={<Skeleton height={300} />}>
             <Image
-              src="/assets/ima.webp"
+              src="/assets/vancouver/5.webp"
               alt="Church Event 3"
               width={500} // Adjust width as needed
               height={300} // Adjust height as needed
@@ -89,7 +89,7 @@ const VancouverPage: React.FC = () => {
           </Suspense>
           <Suspense fallback={<Skeleton height={300} />}>
             <Image
-              src="/assets/ima.webp"
+              src="/assets/vancouver/6.webp"
               alt="Church Event 4"
               width={500} // Adjust width as needed
               height={300} // Adjust height as needed
@@ -102,7 +102,9 @@ const VancouverPage: React.FC = () => {
       {/* Fourth Section */}
       <div className="bg-black text-white text-center p-24 rounded-2xl mt-8">
         <h2 className="text-3xl font-bold">Worship With Us</h2>
-        <button className="mt-4 bg-white text-black px-6 py-2 rounded-full font-bold">Contact Us</button>
+        <button className="mt-4 bg-white text-black px-6 py-2 rounded-full font-bold">
+          <a href="/contact-form">Contact Us</a>
+        </button>
       </div>
     </div>
   );
