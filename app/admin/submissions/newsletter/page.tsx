@@ -6,7 +6,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { db, collection, getDocs, deleteDoc, doc } from '../../../../firebaseConfig';
 
 interface NewsletterSubscription {
-  id: string; // Add an id field for deletion
+  id: string;
   email: string;
   subscribedAt: string;
 }
