@@ -1,145 +1,109 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import AdminLayout from '../admin/Layout';
-import { db, collection, getDocs } from '../../firebaseConfig';
-import Skeleton from 'react-loading-skeleton';
-import 'react-loading-skeleton/dist/skeleton.css';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import AdminLayout from "../admin/Layout";
+import { db, collection, getDocs } from "../../firebaseConfig";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
-interface FormData {
-  id: string;
-  name?: string;
-  email?: string;
-  phone?: string;
-  details?: string;
-  group?: string; // Added to handle data from group-form
-}
-
-const consolidateData = (data: FormData[][]) => {
-  return data.flat();
-};
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
 const OverviewPage = () => {
-  const [data, setData] = useState<FormData[]>([]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [counts, setCounts] = useState<{ [key: string]: number }>({});
+  const [counts, setCounts] = useState({});
+  const [chartData, setChartData] = useState({});
   const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const collections = ['connect-form', 'contactForm', 'volunteers', 'worshipForm', 'group-form', 'newsletterSubscriptions'];
-        const fetchPromises = collections.map(async (col) => {
-          const querySnapshot = await getDocs(collection(db, col));
-          return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as FormData));
-        });
+      const collections = ["connect-form", "contactForm", "volunteers", "worshipForm", "group-form", "newsletterSubscriptions"];
+      const fetchPromises = collections.map(async (col) => {
+        const querySnapshot = await getDocs(collection(db, col));
+        return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      });
 
-        const results = await Promise.all(fetchPromises);
-        const consolidatedData = consolidateData(results);
+      const results = await Promise.all(fetchPromises);
+      const consolidatedData = results.flat();
+      setData(consolidatedData);
 
-        setData(consolidatedData);
+      const countsMap = collections.reduce((acc, col, index) => {
+        acc[col] = results[index].length;
+        return acc;
+      }, {});
 
-        // Set counts for each collection
-        const countsMap = collections.reduce((acc, col, index) => {
-          acc[col] = results[index].length;
-          return acc;
-        }, {} as { [key: string]: number });
+      setCounts(countsMap);
 
-        setCounts(countsMap);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      } finally {
-        setLoading(false);
-      }
+      setChartData({
+        labels: collections,
+        datasets: [
+          {
+            label: "Total Submissions",
+            data: collections.map((col) => countsMap[col] || 0),
+            borderColor: "#00FF00",
+            backgroundColor: "#00FF00",
+            tension: 0.3,
+            fill: false,
+          },
+        ],
+      });
+
+      setLoading(false);
     };
 
     fetchData();
   }, []);
 
-  const handleViewDetails = (collectionName: string) => {
-    router.push(`/admin/${collectionName}`);
-  };
-
   return (
     <AdminLayout>
-      <div className="space-y-6">
-        <h1 className="text-2xl font-semibold mb-4">Dashboard Overview</h1>
-        
+      <div className="p-6 bg-gray-900 text-white">
+        <h1 className="text-4xl font-bold mb-6 text-neon-green">Dashboard Overview</h1>
         {loading ? (
-          <Skeleton count={5} height={50} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Skeleton count={6} height={200} borderRadius={8} baseColor="#333" highlightColor="#444" />
+          </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
-            <div className="bg-white p-6 rounded shadow">
-              <h2 className="text-lg font-semibold">Connect Form</h2>
-              <p className="text-2xl font-bold">{counts['connect-form'] || 0}</p>
-              <p>Total submissions</p>
-              {/* Uncomment to enable button */}
-              {/* <button
-                onClick={() => handleViewDetails('connect-form')}
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-              >
-                View Details
-              </button> */}
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Object.entries(counts).map(([collectionName, count]) => (
+                <div
+                  key={collectionName}
+                  className="bg-gray-800 p-6 rounded-lg shadow-lg border border-neon-green"
+                >
+                  <h2 className="text-xl font-semibold mb-2">{collectionName}</h2>
+                  <p className="text-3xl font-bold">{count}</p>
+                  <p className="text-sm">Total submissions</p>
+                  <button
+                    onClick={() => router.push(`/admin/${collectionName}`)}
+                    className="mt-4 px-4 py-2 bg-neon-green text-gray-900 rounded-lg hover:bg-neon-green-dark transition duration-300"
+                  >
+                    View Details
+                  </button>
+                </div>
+              ))}
             </div>
-            <div className="bg-white p-6 rounded shadow">
-              <h2 className="text-lg font-semibold">Contact Form</h2>
-              <p className="text-2xl font-bold">{counts['contactForm'] || 0}</p>
-              <p>Total submissions</p>
-              {/* Uncomment to enable button */}
-              {/* <button
-                onClick={() => handleViewDetails('contactForm')}
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-              >
-                View Details
-              </button> */}
-            </div>
-            <div className="bg-white p-6 rounded shadow">
-              <h2 className="text-lg font-semibold">Volunteers</h2>
-              <p className="text-2xl font-bold">{counts['volunteers'] || 0}</p>
-              <p>Total submissions</p>
-              {/* Uncomment to enable button */}
-              {/* <button
-                onClick={() => handleViewDetails('volunteers')}
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-              >
-                View Details
-              </button> */}
-            </div>
-            <div className="bg-white p-6 rounded shadow">
-              <h2 className="text-lg font-semibold">Worship Form</h2>
-              <p className="text-2xl font-bold">{counts['worshipForm'] || 0}</p>
-              <p>Total submissions</p>
-              {/* Uncomment to enable button */}
-              {/* <button
-                onClick={() => handleViewDetails('worshipForm')}
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-              >
-                View Details
-              </button> */}
-            </div>
-            <div className="bg-white p-6 rounded shadow">
-              <h2 className="text-lg font-semibold">Group Form</h2>
-              <p className="text-2xl font-bold">{counts['group-form'] || 0}</p>
-              <p>Total submissions</p>
-              {/* Uncomment to enable button */}
-              {/* <button
-                onClick={() => handleViewDetails('group-form')}
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-              >
-                View Details
-              </button> */}
-            </div>
-            <div className="bg-white p-6 rounded shadow">
-              <h2 className="text-lg font-semibold">Newsletter Submissions</h2>
-              <p className="text-2xl font-bold">{counts['newsletterSubscriptions'] || 0}</p>
-              <p>Total submissions</p>
-              {/* Uncomment to enable button */}
-              {/* <button
-                onClick={() => handleViewDetails('newsletterSubscriptions')}
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-              >
-                View Details
-              </button> */}
+            <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+              <h2 className="text-xl font-semibold mb-4">Submission Trends</h2>
+              <Line data={chartData} />
             </div>
           </div>
         )}
