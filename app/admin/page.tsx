@@ -1,110 +1,102 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import AdminLayout from "../admin/Layout";
-import { db, collection, getDocs } from "../../firebaseConfig";
-import Skeleton from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
-import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import AdminLayout from '../admin/Layout';
+import { db, collection, getDocs } from '../../firebaseConfig';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+interface FormData {
+  id: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  details?: string;
+  group?: string;
+}
+
+const consolidateData = (data: FormData[][]) => data.flat();
 
 const OverviewPage = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<FormData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [counts, setCounts] = useState({});
-  const [chartData, setChartData] = useState({});
+  const [counts, setCounts] = useState<{ [key: string]: number }>({});
   const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
-      const collections = ["connect-form", "contactForm", "volunteers", "worshipForm", "group-form", "newsletterSubscriptions"];
-      const fetchPromises = collections.map(async (col) => {
-        const querySnapshot = await getDocs(collection(db, col));
-        return querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      });
+      try {
+        const collections = ['connect-form', 'contactForm', 'volunteers', 'worshipForm', 'group-form', 'newsletterSubscriptions'];
+        const fetchPromises = collections.map(async (col) => {
+          const querySnapshot = await getDocs(collection(db, col));
+          return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as FormData));
+        });
 
-      const results = await Promise.all(fetchPromises);
-      const consolidatedData = results.flat();
-      setData(consolidatedData);
+        const results = await Promise.all(fetchPromises);
+        const consolidatedData = consolidateData(results);
 
-      const countsMap = collections.reduce((acc, col, index) => {
-        acc[col] = results[index].length;
-        return acc;
-      }, {});
+        setData(consolidatedData);
 
-      setCounts(countsMap);
+        const countsMap = collections.reduce((acc, col, index) => {
+          acc[col] = results[index].length;
+          return acc;
+        }, {} as { [key: string]: number });
 
-      setChartData({
-        labels: collections,
-        datasets: [
-          {
-            label: "Total Submissions",
-            data: collections.map((col) => countsMap[col] || 0),
-            borderColor: "#00FF00",
-            backgroundColor: "#00FF00",
-            tension: 0.3,
-            fill: false,
-          },
-        ],
-      });
-
-      setLoading(false);
+        setCounts(countsMap);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
   }, []);
 
+  const handleViewDetails = (collectionName: string) => {
+    router.push(`/admin/${collectionName}`);
+  };
+
+  const renderCard = (title: string, count: number, collectionName: string) => (
+    <div className="bg-white p-6 rounded-lg shadow-md flex flex-col justify-between">
+      <div>
+        <h2 className="text-lg font-semibold mb-2">{title}</h2>
+        <p className="text-3xl font-bold">{count}</p>
+        <p className="text-sm text-gray-600">Total submissions</p>
+      </div>
+      <button
+        onClick={() => handleViewDetails(collectionName)}
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
+      >
+        View Details
+      </button>
+    </div>
+  );
+
+  // Define the titles with a specific type
+  const titles: { [key: string]: string } = {
+    'connect-form': 'Connect Form',
+    'contactForm': 'Contact Form',
+    'volunteers': 'Volunteers',
+    'worshipForm': 'Worship Form',
+    'group-form': 'Group Form',
+    'newsletterSubscriptions': 'Newsletter Submissions',
+  };
+
   return (
     <AdminLayout>
-      <div className="p-6 bg-gray-900 text-white">
-        <h1 className="text-4xl font-bold mb-6 text-neon-green">Dashboard Overview</h1>
+      <div className="space-y-8 p-6">
+        <h1 className="text-3xl font-bold mb-6">Dashboard Overview</h1>
+        
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Skeleton count={6} height={200} borderRadius={8} baseColor="#333" highlightColor="#444" />
+            <Skeleton count={6} height={150} borderRadius={8} />
           </div>
         ) : (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Object.entries(counts).map(([collectionName, count]) => (
-                <div
-                  key={collectionName}
-                  className="bg-gray-800 p-6 rounded-lg shadow-lg border border-neon-green"
-                >
-                  <h2 className="text-xl font-semibold mb-2">{collectionName}</h2>
-                  <p className="text-3xl font-bold">{count}</p>
-                  <p className="text-sm">Total submissions</p>
-                  <button
-                    onClick={() => router.push(`/admin/${collectionName}`)}
-                    className="mt-4 px-4 py-2 bg-neon-green text-gray-900 rounded-lg hover:bg-neon-green-dark transition duration-300"
-                  >
-                    View Details
-                  </button>
-                </div>
-              ))}
-            </div>
-            <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Submission Trends</h2>
-              <Line data={chartData} />
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Object.entries(counts).map(([collectionName, count]) => {
+              return renderCard(titles[collectionName] || collectionName, count, collectionName);
+            })}
           </div>
         )}
       </div>

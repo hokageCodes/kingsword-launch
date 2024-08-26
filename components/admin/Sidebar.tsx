@@ -44,7 +44,7 @@ const Sidebar = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link legacyBehavior href="/admin/submissions/contact-form">
+                  <Link legacyBehavior href="/admin/submissions/contactForm">
                     <a className="flex items-center p-4 hover:bg-white hover:text-black">
                       <FaUser className="mr-3" />
                       Contact Form
@@ -60,7 +60,7 @@ const Sidebar = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link legacyBehavior href="/admin/submissions/newsletter">
+                  <Link legacyBehavior href="/admin/submissions/newsletterSubscriptions">
                     <a className="flex items-center p-4 hover:bg-white hover:text-black">
                       <FaUser className="mr-3" />
                       Newsletter
@@ -76,7 +76,7 @@ const Sidebar = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link legacyBehavior href="/admin/submissions/worship-form">
+                  <Link legacyBehavior href="/admin/submissions/worshipForm">
                     <a className="flex items-center p-4 hover:bg-white hover:text-black">
                       <FaList className="mr-3" />
                       Worship Form

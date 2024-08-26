@@ -6,13 +6,13 @@ const ministers = [
     name: 'Dr. Kay Ijisesan',
     position: 'Apostle, KingsWord and The New Churches',
     story: 'Dr. Kay, is the founder and apostle of KingsWord Ministries International and TheNew Churches, overseeing several campuses in Africa, Europe, and North America. Based in Chicago, he is dedicated to raising a Christ-centered, Word-based, Spirit-filled Supernatural Army. For over 25 years, Dr. Kay has been committed to church planting and empowering Christian creatives to impact culture with Christ’s values. He is married to Pastor May, who serves as the Senior Pastor of KingsWord Chicago.',
-    image: '/images/dr-kay.jpg', // Replace with the actual image path in your public folder
+    image: '/assets/dk.jpg', // Replace with the actual image path in your public folder
   },
   {
     name: 'Pastor Dotun Oragbade',
     position: 'Senior Pastor, KingsWord Dallas',
     story: 'Pastor Dotun Oragbade is the Pastor of KingsWord Dallas. He is a church planter and a pastor. He has pastored and led churches in Lagos, London, Chicago and other cities in different parts of the world. He is passionate about teaching Gods word and helping people find expression for their gifts.',
-    image: '/images/pastor-dotun.jpg', // Replace with the actual image path in your public folder
+    image: '/assets/pd.jpg', // Replace with the actual image path in your public folder
   },
   {
     name: 'Pastor Muyiwa Oseni',
@@ -22,12 +22,12 @@ const ministers = [
   },
   {
     name: 'Eben',
-    position: '“Guest Minister',
+    position: 'Guest Minister',
     story: 'Eben is a globally recognized worship leader whose songs have become anthems in churches around the world. His ministry is marked by a deep passion for leading people into the presence of God through worship.',
     image: '/assets/eben.jpg', // Replace with the actual image path in your public folder
   },
   {
-    name: 'The Kings Heartbeat',
+    name: 'The King’s Heartbeat',
     position: 'Worship Team',
     story: 'The King’s Heartbeat is the worship team of KingsWord Ministries in Canada. They are known for their anointed music and powerful worship sessions that create an atmosphere for the supernatural. The King’s Heartbeat will be leading us in anointed worship sessions at Supernatural Canada.',
     image: '/assets/heartbeat.jpg', // Replace with the actual image path in your public folder

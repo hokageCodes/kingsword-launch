@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const SummerCanadaPhotos = () => {
   // Example image URLs (replace with your actual image paths)
-  const images = Array.from({ length: 21 }, (_, index) => `/images/image${index + 1}.jpg`);
+  const images = Array.from({ length: 20 }, (_, index) => `/images/image${index + 1}.jpg`);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
